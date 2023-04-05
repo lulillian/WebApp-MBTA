@@ -32,7 +32,7 @@ def get_json(url: str) -> dict:
 
 
 
-def get_lat_long(place_name: str) -> tuple[str, str]:
+def get_city(place_name: str) -> tuple[str, str]:
     """
     Given a place name or address, return a (latitude, longitude) tuple with the coordinates of the given place.
 
@@ -40,53 +40,12 @@ def get_lat_long(place_name: str) -> tuple[str, str]:
     """
     url=f'https://api.mapbox.com/geocoding/v5/mapbox.places/{place_name}.json?access_token={MAPBOX_TOKEN}'
     data=get_json(url)
-    lat_long=data['features'][0]['geometry']['coordinates']
-    lat_long_tup= (lat_long[1],lat_long[0])
-    return lat_long_tup
+    print(data)
+    # lat_long=data['features']
 
 
-#print(get_lat_long('Boston Commons'))
+get_city('Fenway Park')
 
-
-def get_nearest_station(latitude: str, longitude: str) -> tuple[str, bool]:
-    """
-    Given latitude and longitude strings, return a (station_name, wheelchair_accessible) tuple for the nearest MBTA station to the given coordinates.
-
-    See https://api-v3.mbta.com/docs/swagger/index.html#/Stop/ApiWeb_StopController_index for URL formatting requirements for the 'GET /stops' API.
-    """
-    url=f'https://api-v3.mbta.com/stops?sort=distance&filter%5Blatitude%5D={latitude}&filter%5Blongitude%5D={longitude}'
-    data_dict=get_json(url)
-    stopdict = data_dict['data'][0]
-    nearest_station=stopdict['attributes']['name']
-    wheelchair=stopdict['attributes']['wheelchair_boarding']
-    if wheelchair>=1:
-        wheelchair= True
-    else:
-        wheelchair= False
-        
-    # print(nearest_station)
-    # print(wheelchair)
-    result=(nearest_station,wheelchair)
-    return result
-
-# print(get_nearest_station('42.355628831221196', '-71.06576851534196'))
-
-
-
-def find_stop_near(place_name: str) -> tuple[str, bool]:
-    """
-    Given a place name or address, return the nearest MBTA stop and whether it is wheelchair accessible.
-
-    This function might use all the functions above.
-    """
-    coordinates_tuples=get_lat_long(place_name)
-    # print(coordinates_tuples)
-    lat=coordinates_tuples[0]
-    long=coordinates_tuples[1]
-    final_result=get_nearest_station(lat,long)
-    return final_result
-
-# print(find_stop_near('Fenway Park'))
 
 def get_temp(city: str) -> float:
     """
@@ -107,15 +66,3 @@ def get_temp(city: str) -> float:
     # print(response_data)
     temp=response_data['main']['temp']
     print(temp)
-
-
-def main():
-    place_name='Fenway Park'
-    stop_result=find_stop_near(place_name)
-    print(stop_result)
-
-
-
-
-if __name__ == '__main__':
-    main()
