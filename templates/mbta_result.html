@@ -7,15 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBTA Stop</title>
     <style>
-        .red {
+        .stop {
             color: rgb(81, 59, 251);
         }
-
+        .temp{
+            color: green
+        }
     </style>
 </head>
 
 <body>
-    <p class="red">The closest stop near {{you}} is {{ stop }}.  </p>
+    <p class="stop">The closest stop near {{you}} is {{ stop }}.   </p>
+    <p class="temp">The current temperature at {{you}} in {{city}} is {{temp_far}} fahrenheit. </p>
+    
+    
 </body>
 
 </html>

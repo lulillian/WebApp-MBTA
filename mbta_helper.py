@@ -3,6 +3,7 @@ import urllib.request
 import json
 import requests
 from pprint import pprint
+import math 
 
 
 
@@ -88,15 +89,30 @@ def find_stop_near(place_name: str) -> tuple[str, bool]:
 
 # print(find_stop_near('Fenway Park'))
 
-def get_temp(city: str) -> float:
-    """
-    Returns the current wind speed in meters per second for the given city from OpenWeatherMap.
 
-    Parameters:
-    city -- the name of the city (str)
-    country -- the two-letter country code for the city (str)
+def get_city(place_name: str):
+    """
+    Given a place name or address, return a (latitude, longitude) tuple with the coordinates of the given place.
+
+    See https://docs.mapbox.com/api/search/geocoding/ for Mapbox Geocoding API URL formatting requirements.
+    """
+    url=f'https://api.mapbox.com/geocoding/v5/mapbox.places/{place_name}.json?access_token={MAPBOX_TOKEN}'
+    data=get_json(url)
+    # print(data)
+    # city=data['features'][2]['context'][2]['text']
+    city=data['features'][0]['context'][2]['text']
+    return city
+    # print (city)
+
+# get_city('Harvard Univeristy')
+
+
+def get_temp(city: str):
+    """
+    Returns the current temperature in Farenheit of a certain city
     """
     APIKEY='ada48657851c101cb5c56f796ed3195e'
+    # city=get_city(place_name)
     url=f'http://api.openweathermap.org/data/2.5/weather?q={city},us&APPID={APIKEY}'
 
     # print(url)
@@ -105,17 +121,21 @@ def get_temp(city: str) -> float:
     response_text=f.read().decode('utf-8')
     response_data=json.loads(response_text)
     # print(response_data)
-    temp=response_data['main']['temp']
-    print(temp)
+    temp_kel=response_data['main']['temp']
+    temp_far=math.floor(1.8*(float(temp_kel)-273.15)+32)
+    # print(temp_far)
+    return temp_far
+    # print(f'The current temperature at {place_name} in {city} is {temp_far} degrees Farenheit.')
+
+get_temp('Boston')
+
+# def main():
+#     place_name='Fenway Park'
+#     stop_result=find_stop_near(place_name)
+#     print(stop_result)
 
 
-def main():
-    place_name='Fenway Park'
-    stop_result=find_stop_near(place_name)
-    print(stop_result)
 
 
-
-
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()

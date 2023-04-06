@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from mbta_helper import find_stop_near
+from mbta_helper import find_stop_near, get_city, get_temp
 
 
 app = Flask(__name__)
@@ -17,7 +17,11 @@ def origin():
 def results():
     place_name=request.form['current_loco']
     stop=find_stop_near(place_name)
-    return render_template('mbta_result.html',you=place_name,stop=stop)
+    city=get_city(place_name)
+    temp_far=get_temp(city)
+    return render_template('mbta_result.html',you=place_name,stop=stop,city=city,temp_far=temp_far)
+
+
 
 
 

@@ -40,22 +40,21 @@ def get_city(place_name: str) -> tuple[str, str]:
     """
     url=f'https://api.mapbox.com/geocoding/v5/mapbox.places/{place_name}.json?access_token={MAPBOX_TOKEN}'
     data=get_json(url)
-    print(data)
-    # lat_long=data['features']
+    # print(data)
+    city=data['features'][1]['context'][2]['text']
+    return city
+    # print (city)
 
 
 get_city('Fenway Park')
 
 
-def get_temp(city: str) -> float:
+def get_temp(place_name: str) -> float:
     """
-    Returns the current wind speed in meters per second for the given city from OpenWeatherMap.
-
-    Parameters:
-    city -- the name of the city (str)
-    country -- the two-letter country code for the city (str)
+    Returns the current temperature in Farenheit of a certain city
     """
     APIKEY='ada48657851c101cb5c56f796ed3195e'
+    city=get_city(place_name)
     url=f'http://api.openweathermap.org/data/2.5/weather?q={city},us&APPID={APIKEY}'
 
     # print(url)
@@ -64,5 +63,8 @@ def get_temp(city: str) -> float:
     response_text=f.read().decode('utf-8')
     response_data=json.loads(response_text)
     # print(response_data)
-    temp=response_data['main']['temp']
-    print(temp)
+    temp_kel=response_data['main']['temp']
+    temp_far=1.8*(float(temp_kel)-273.15)+32
+    print(f'The current temperature at {place_name} in {city} is {temp_far} degrees Farenheit.')
+
+# get_temp('Boston Commons')
