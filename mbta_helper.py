@@ -83,7 +83,7 @@ def find_stop_near(place_name: str) -> tuple[str, bool]:
     coordinates_tuples=get_lat_long(place_name)
     # print(coordinates_tuples)
     lat=coordinates_tuples[0]
-    long=coordinates_tuples[1]
+    long=coordinates_tuples[1] 
     final_result=get_nearest_station(lat,long)
     return final_result
 
